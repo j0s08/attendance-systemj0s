@@ -1,0 +1,120 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل حضور الدورة</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
+    <script type="module" src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <img src="https://via.placeholder.com/150?text=شعار+الشركة" alt="شعار الشركة" class="logo">
+        <h1>تسجيل حضورك</h1>
+        <form id="attendanceForm">
+            <label for="name">الاسم:</label>
+            <input type="text" id="name" required>
+            
+            <label for="phone">رقم الجوال:</label>
+            <input type="tel" id="phone" required>
+            
+            <label for="email">البريد الإلكتروني (اختياري):</label>
+            <input type="email" id="email">
+            
+            <button type="submit">تسجيل الحضور</button>
+        </form>
+        <p id="message"></p>
+        
+        <div id="adminPanel" style="display:none; margin-top:20px;">
+            <h2>لوحة الإدارة</h2>
+            <p class="admin-welcome">مرحباً، يوسف! هنا يمكنك إدارة إعدادات الدورة وسجلات الحضور.</p>
+            <button id="closeAdmin" class="close-btn">إغلاق</button>
+            
+            <div class="admin-section">
+                <h3>إعدادات الدورة</h3>
+                <label for="startHour">ساعة البداية (0-23):</label>
+                <input type="number" id="startHour" min="0" max="23">
+                
+                <label for="endHour">ساعة النهاية (0-23):</label>
+                <input type="number" id="endHour" min="0" max="23">
+                <button id="saveHours">حفظ الأوقات</button>
+                
+                <label for="workshopLat">خط العرض للموقع:</label>
+                <input type="number" id="workshopLat" step="any">
+                
+                <label for="workshopLng">خط الطول للموقع:</label>
+                <input type="number" id="workshopLng" step="any">
+                
+                <label for="radius">الراديوس (متر):</label>
+                <input type="number" id="radius">
+                <button id="saveLocation">حفظ الموقع</button>
+                <p id="locationSaveMessage" style="color:green; font-size:12px;"></p>
+                
+                <button id="toggleLocationRestriction">تعطيل التقييد بالموقع</button>
+                <p id="locationMessage" style="color:green; font-size:12px;">التقييد بالموقع مفعل حالياً.</p>
+            </div>
+            
+            <div class="admin-section">
+                <h3>سجلات الحضور</h3>
+                <ul id="recordsList"></ul>
+                <button id="exportBtn">تصدير السجلات إلى Excel</button>
+                <button id="clearRecords">حذف جميع السجلات</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer style="text-align: center; margin-top: 20px;">
+        <button id="adminBtn" style="font-size: small; width: auto; background: #ccc; color: #333;">لوحة الإدارة</button>
+    </footer>
+    
+    <div id="loginForm" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:white; padding:20px; border:1px solid #ccc; z-index:100;">
+        <label for="username">اسم المستخدم:</label>
+        <input type="text" id="username">
+        <label for="password">كلمة المرور:</label>
+        <input type="password" id="password">
+        <button id="loginSubmit">دخول</button>
+        <p id="loginMessage" style="color:red;"></p>
+    </div>
+</body>
+</html>
