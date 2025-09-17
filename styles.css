@@ -1,0 +1,169 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    direction: rtl;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.logo {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+h1, h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    text-align: right;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+#message {
+    margin-top: 10px;
+    color: red;
+}
+
+#recordsList {
+    list-style: none;
+    padding: 0;
+    text-align: right;
+}
+
+#recordsList li {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding: 5px;
+}
+
+footer button {
+    background: #ccc !important;
+    color: #333 !important;
+    font-size: small;
+    width: auto;
+    padding: 8px 16px;
+}
+
+#loginForm {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 300px;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    z-index: 100;
+    overflow-y: auto;
+}
+
+.admin-section {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+}
+
+.admin-welcome {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.close-btn {
+    background: #d9534f !important;
+    width: auto;
+    padding: 8px 16px;
+    margin-top: 10px;
+}
+
+.close-btn:hover {
+    background: #c9302c !important;
+}
+
+#toggleLocationRestriction {
+    background: #f0ad4e !important;
+    margin-top: 10px;
+}
+
+#toggleLocationRestriction:hover {
+    background: #ec971f !important;
+}
+
+@media (max-width: 400px) {
+    .container {
+        padding: 15px;
+    }
+    .logo {
+        width: 120px;
+    }
+    h1, h2 {
+        font-size: 20px;
+    }
+    h3 {
+        font-size: 18px;
+    }
+    input, button {
+        font-size: 14px;
+    }
+    .admin-section {
+        padding: 10px;
+    }
+}
